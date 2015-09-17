@@ -1,0 +1,9 @@
+#include<iostream>
+#include<outstream>
+#include"../include/index.h"
+
+using namespace std;
+
+void Index::indexDocument(string document){
+  
+}
