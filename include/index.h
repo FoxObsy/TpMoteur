@@ -25,7 +25,7 @@ class Index {
   /**
    * Permet le stockage dans notre modèle de donnée de l'index d'un document
    */
-  void indexDocument(std::string document);
+  void indexDocument(std::list<std::string> document);
 
   /**
    * Contruit un fichier texte à partir de notre index
