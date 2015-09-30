@@ -7,29 +7,59 @@ using namespace std;
 
 void Index::indexDocument(list<string> document){
   list<string>::iterator it;
+  vector<string>::iterator it2;
+  vector<string>::iterator it3;
   vector<string> listeMotTotal;
-  for(it = document.begin(); it != document.end(); i++){
-    listeMotTotal = extractCaractere((char*)document.c_str);
+  for(it = document.begin(); it != document.end(); it++){
+    extractCaractere((char*)*it.c_str, listeMotTotal);
   }
-  for(it = document.begin(); it != document.end(); i++){
-
+  for(it = document.begin(); it != document.end(); it++){
+    // listeMotDoc = extractCaractere((char*)*it.c_str);
+    // TODO voir occurence
+    for(it2 = listeMotTotal.begin(); it2 != listeMotTotal.end(); it++){
+      nbOccurence = calculOccurence(*it2, *it);
+      if(nbOccurence != 0){
+	occurenceMot = 0;
+	for(it3 = document.begin(); it3 != document.end(); it3++){
+	  if(calculOccurence(*it2, *it3) != 0){
+	    occurenceDoc ++;
+	  }
+	}
+	res = nbOccurence*(document.size()/occurenceDoc);
+      }else{
+			
+      }
+    }
   }
 }
 
-list<string> extractCaractère(char * nomDocument){
+int calculOccurence(string mot, string document){
+  list<string> listeMot;
+  extractCaractère((char*)document.c_str, listeMot);
+  list<string>::iterator it:
+    int res = 0;
+  for(it=listeMot.begin(); it!=listeMot.end(); it++){
+    if(mot == *it){
+      res++;
+    }
+  }
+  return res;
+}
+
+template<typename T>
+void extractCaractère(char * nomDocument, T<string>& tokens){
   ifstream infile(nomDocument);
   string result;
-  vector<string> tokens;
   string delimiters = " ,#()',.";
 
   while(getline(infile, str)){
     Tokenize(str, tokens, delimiters);
   }
-  
   return tokens;
 }
 
-void Tokenize(const string& str, vector<string>& tokens, const string& delimiters = " ")
+template<typename T>
+void Tokenize(const string& str, T<string>& tokens, const string& delimiters = " ")
 {
     // Skip delimiters at beginning.
     string::size_type lastPos = str.find_first_not_of(delimiters, 0);
