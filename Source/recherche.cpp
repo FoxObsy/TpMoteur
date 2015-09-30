@@ -8,8 +8,8 @@
 #include "../include/recherche.h"
 using namespace std;
 map<string,double> mapDesMotsDuDoc(char * nomFichierIndex, int indexDocument){
-	int index = 0, index2 = -1, index3 = 0;
-	string result ="";
+  int index = 0, index2 = -1, index3 = 0;
+  string result ="";
     string str="";
     char * result2;
     char * result3;
