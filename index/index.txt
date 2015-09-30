@@ -1,0 +1,8 @@
+nomDoc1 mot1 3.2 mot2 2.1 mot3 3.2
+nomDoc2 mot1 3.2 mot2 2.1 mot3 3.2
+nomDoc3 mot1 3.2 mot2 2.1 mot3 3.2
+nomDoc4 mot1 3.2 mot2 2.1 mot3 3.2
+nomDoc5 mot1 3.2 mot2 2.1 mot3 3.2
+nomDoc6 mot1 3.2 mot2 2.1 mot3 3.2
+nomDoc7 mot1 3.2 mot2 2.1 mot3 3.2
+nomDoc8 mot1 3.2 mot2 2.1 mot3 3.2

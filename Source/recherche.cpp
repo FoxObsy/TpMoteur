@@ -6,14 +6,15 @@
 */
 
 #include "../include/recherche.h"
+
 using namespace std;
-map<string,double> mapDesMotsDuDoc(char * nomFichierIndex, int indexDocument){
+map<string,double> recherche::mapDesMotsDuDoc(int indexDocument){
 	int index = 0, index2 = -1, index3 = 0;
 	string result ="";
     string str="";
     char * result2;
     char * result3;
-    string * ListeDesMotsDuDoc;
+    string * ListeDesMotsDuDoc=NULL;
     map<string,double> MapDesMotsDuDoc;
 
 
@@ -40,31 +41,33 @@ map<string,double> mapDesMotsDuDoc(char * nomFichierIndex, int indexDocument){
    		index2++;
     }
 
-    while(index3 < result3.length())
+    while((unsigned)index3 < strlen((char*)result.c_str()))
     {
-    	MapDesMotsDuDoc.insert(pair::<string,double>(result3[index3],result3[index3+1]));
+    	MapDesMotsDuDoc.insert(pair<string,double>(ListeDesMotsDuDoc[index3],stod(ListeDesMotsDuDoc[index3+1])));
     	index3 += 2;
     }
 
     return MapDesMotsDuDoc;
 }
 
-vector<int> calculDuVecteurRDunDocument(char * nomFichierIndex, int indexDocument)
+vector<int> recherche::calculDuVecteurRDunDocument(int indexDocument)
 {
 	vector<int> VecteurR;
-	index = 0;
+	int index = 0;
     map<string,double> MapDesMotsDuDoc;
-    map<string,double>::iterator it = MapDesMotsDuDoc.begin();
-    map<string,double>::iterator it2 = MapDesMots.begin();
 
-    MapDesMotsDuDoc = mapDesMotsDuDoc(nomFichierIndex,indexDocument);
+    MapDesMotsDuDoc = mapDesMotsDuDoc(indexDocument);
     
-    while(it2 != MapDesMots.end())
+    map<string,double>::iterator it = MapDesMotsDuDoc.begin();
+    vector<string>::iterator it2 = requete.begin();
+
+    
+    while(it2 != requete.end())
     {
-    	VecteurR.insert(index4, 0);
+    	VecteurR.push_back(0);
     	while(it != MapDesMotsDuDoc.end())
     	{
-    		if(it->first == it2->first)
+    		if(it->first == *it2)
     		{
     			VecteurR[index] = 1;
     		}
@@ -78,20 +81,20 @@ vector<int> calculDuVecteurRDunDocument(char * nomFichierIndex, int indexDocumen
 
 }
 
-map<int,vector<int>> calculDuVecteurR(int nombreDeDocs)
+map<int,vector<int>> recherche::calculDuVecteurR(int nombreDeDocs)
 {
 	map<int,vector<int>> MapR;
 	int compteur = 0;
 	while (compteur < nombreDeDocs)
 	{
-		MapR.insert(pair::<int,vector<int>>(compteur,calculDuVecteurRDunDocument("../index/index.txt",compteur)));
+		MapR.insert(pair<int,vector<int>>(compteur,calculDuVecteurRDunDocument(compteur)));
 	}
 	return MapR;
 }
 
-map<int,double> calculDuCoeffDeSalton(int nombreDeDocs)
+map<int,double> recherche::calculDuCoeffDeSalton(int nombreDeDocs)
 {
-	int compteur = 0, somme1, somme2, somme3;
+	int compteur = 0, somme1, somme2, somme3, mult1, mult2, mult3;
 	map<int,vector<int>> MapR = calculDuVecteurR(nombreDeDocs);
 	vector<int>::iterator it2;
 	map<int,vector<int>>::iterator it = MapR.begin();
@@ -103,45 +106,53 @@ map<int,double> calculDuCoeffDeSalton(int nombreDeDocs)
 	{
 		it2 = it->second.begin();
 		it3 = MapDesMotsDuDoc.begin();
-		MapDesMotsDuDoc = mapDesMotsDuDoc("index.txt",compteur);
+		MapDesMotsDuDoc = mapDesMotsDuDoc(compteur);
 		while (it2 != it->second.end())
 		{
-			somme1 += *(it3->second)*(*it2);
-			somme2 += *(it3->second)*(*(it3->second));
-			somme3 += (*it2)*(*it2);
+            mult1 = it3->second;
+            mult1 *= *it2;
+			somme1 +=  mult1 ;
+            mult2 = it3->second;
+            mult2 *= it3->second;
+			somme2 += mult2;
+            mult3 = *it2;
+            mult3 *= *it2;
+			somme3 += mult3;
 			it2++;
 			it3++;
 		}
-		MapCoeffDeSalton.insert(pair::<int,double>(compteur,(somme1/(sqrt(somme2*somme3))));
+
+		MapCoeffDeSalton.insert(pair<int,double>(compteur,(somme1/(sqrt(somme2*somme3)))));
 		compteur++;
 		it++;
 	}
+    return MapCoeffDeSalton;
 }
 
-vector<int> listeDesDocumentsAAfficher(int nombreDeDocs)
+vector<int> recherche::listeDesDocumentsAAfficher(int nombreDeDocs)
 {
 	map<int,double> MapCoeffDeSalton= calculDuCoeffDeSalton(nombreDeDocs);
-	map<int,double>::iterator it = MapCoeffDeSalton->begin();
+	map<int,double>::iterator it = MapCoeffDeSalton.begin();
 	map<double,int> MapCoeffDeSaltonInverse;
-	map<double,int>::iterator it2 = MapCoeffDeSaltonInverse->end();
+	map<double,int>::iterator it2 = MapCoeffDeSaltonInverse.end();
 	vector<int> ListeDesDocumentsAAfficher;
 
-	while(it != MapCoeffDeSalton->end())
+	while(it != MapCoeffDeSalton.end())
 	{
-		MapCoeffDeSaltonInverse.insert(pair::<double,int>(*(it->second),*(it->first)));
+		MapCoeffDeSaltonInverse.insert(pair<double,int>(it->second,it->first));
 		it++;
 	}
 
-	while(it2 != MapCoeffDeSaltonInverse->begin())
+	while(it2 != MapCoeffDeSaltonInverse.begin())
 	{
-		ListeDesDocumentsAAfficher.insert(*(it2->second));
+		ListeDesDocumentsAAfficher.push_back(it2->second);
 		it2--;
 	}
 
 	return ListeDesDocumentsAAfficher;
 }
 
-string NomDuDocSelonIndex(int indexDoc){
+string recherche::NomDuDocSelonIndex(int indexDoc){
 	int index = 0;
 	string result ="";
     string str="";
@@ -153,7 +164,7 @@ string NomDuDocSelonIndex(int indexDoc){
 
     while(getline(infile,str))
     {
-    	if(index==indexDocument){
+    	if(index==indexDoc){
         	result = result + str +"\n";
     	}
     	index++;
