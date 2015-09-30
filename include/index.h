@@ -16,7 +16,7 @@ using namespace std;
  * Classe permettent l'instanciation un modèle de donnée pour le stockage de l'index d'un moteur de recherche
  */
 class index {
-  map<map<string, string>, double> map_index;
+  map<string,map<string,double>> map_index;
 
  public :
   /**

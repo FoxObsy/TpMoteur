@@ -1,11 +1,11 @@
-#include<iostream>
-#include<ostream>
-#include<string>
-#include<list>
-#include<map>
-#include<vector>
-#include<fstream>
-#include"../include/index.h"
+#include <iostream>
+#include <ostream>
+#include <string>
+#include <list>
+#include <map>
+#include <vector>
+#include <fstream>
+#include "../include/index.h"
 
 using namespace std;
 
@@ -21,7 +21,7 @@ void index::indexDocument(list<string> document){
   for(it = document.begin(); it != document.end(); it++){
     for(it2 = listeMotTotal.begin(); it2 != listeMotTotal.end(); it2++){
       nbOccurence = calculOccurence(*it2, *it);
-      map<string,string> inner;
+      map<string,double> inner;
       if(nbOccurence != 0){
 	occurenceDoc = 0;
 	for(it3 = document.begin(); it3 != document.end(); it3++){
@@ -30,15 +30,33 @@ void index::indexDocument(list<string> document){
 	  }
 	}
 	res = nbOccurence*(document.size()/occurenceDoc);
-	inner.insert(make_pair(*it, *it2));
-	map_index.insert(make_pair(inner, res));
+	inner.insert(make_pair(*it2, res));
+	map_index.insert(make_pair(*it, inner));
       }else{
-	inner.insert(make_pair(*it, *it));
-	map_index.insert(make_pair(inner, 0));
+	inner.insert(make_pair(*it2, 0));
+	map_index.insert(make_pair(*it, inner));
       }
     }
   }
 }
+
+void index::fichierIndex(){
+  ofstream fichier("index.txt", ios::out | ios::trunc);
+  map<string,map<string,double>>::iterator it;
+  if(fichier){
+    for(it = map_index.begin(); it != map_index.end(); it++){
+      fichier << it->first << " ";
+      map<string,double> inner;
+      map<string,double>::iterator it2;
+      for(it2 = inner.begin(); it2 != inner.end(); it2++){
+	fichier << it2->first << " " << it2->second << " ";
+      }
+      fichier << endl;
+    }
+    fichier.close();
+  }
+}
+
 
 int calculOccurence(string mot, string document){
   list<string> listeMot;
