@@ -15,20 +15,22 @@
 #include <string>
 #include <map>
 #include <iterator>
+#include <vector>
 #include <utility>
+#include <cstring>
+#include <fstream>
 
 using namespace std;
 
  class recherche{
  	map<string,double> MapDesMots;
  	
-
  	public :
  	map<string,double> mapDesMotsDuDoc(string nomFichierIndex, int indexDocument);
  	vector<int> calculDuVecteurRDunDocument(string nomFichierIndex, int indexDocument);
- 	map<int indexDocument,Vector<int>> calculDuVecteurR(int nombreDeDocs);
- 	vector<int indexDocument, int> calculDuCoeffDeSalton();
- 	vector<int indexDocument> listeDesDocumentsAAfficher();
-
-
+ 	map<int,vector<int>> calculDuVecteurR(int nombreDeDocs);
+ 	map<int, double> calculDuCoeffDeSalton(int nombreDeDocs);
+ 	vector<int> listeDesDocumentsAAfficher(int nombreDeDocs);
  };
+
+ #endif
