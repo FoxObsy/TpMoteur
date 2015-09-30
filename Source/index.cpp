@@ -1,31 +1,35 @@
 #include<iostream>
-#include<outstream>
+#include<ostream>
 #include<string>
+#include<list>
+#include<map>
+#include<vector>
+#include<fstream>
 #include"../include/index.h"
 
 using namespace std;
 
-void Index::indexDocument(list<string> document){
+void index::indexDocument(list<string> document){
   list<string>::iterator it;
   vector<string>::iterator it2;
-  vector<string>::iterator it3;
+  list<string>::iterator it3;
   vector<string> listeMotTotal;
+  int nbOccurence, occurenceDoc, res;
   for(it = document.begin(); it != document.end(); it++){
-    extractCaractere((char*)*it.c_str, listeMotTotal);
+    extractCaractere((char*)(*it).c_str(), listeMotTotal);
   }
   for(it = document.begin(); it != document.end(); it++){
-    // listeMotDoc = extractCaractere((char*)*it.c_str);
-    // TODO voir occurence
-    for(it2 = listeMotTotal.begin(); it2 != listeMotTotal.end(); it++){
+    for(it2 = listeMotTotal.begin(); it2 != listeMotTotal.end(); it2++){
       nbOccurence = calculOccurence(*it2, *it);
       if(nbOccurence != 0){
-	occurenceMot = 0;
+	occurenceDoc = 0;
 	for(it3 = document.begin(); it3 != document.end(); it3++){
 	  if(calculOccurence(*it2, *it3) != 0){
 	    occurenceDoc ++;
 	  }
 	}
 	res = nbOccurence*(document.size()/occurenceDoc);
+	map_index.insert(pair<map<string,string>,double>(pair<string,string>(*it, *it2), res));
       }else{
 			
       }
@@ -35,9 +39,9 @@ void Index::indexDocument(list<string> document){
 
 int calculOccurence(string mot, string document){
   list<string> listeMot;
-  extractCaractère((char*)document.c_str, listeMot);
-  list<string>::iterator it:
-    int res = 0;
+  extractCaractere((char*)document.c_str(), listeMot);
+  list<string>::iterator it;
+  int res = 0;
   for(it=listeMot.begin(); it!=listeMot.end(); it++){
     if(mot == *it){
       res++;
@@ -47,19 +51,19 @@ int calculOccurence(string mot, string document){
 }
 
 template<typename T>
-void extractCaractère(char * nomDocument, T<string>& tokens){
-  ifstream infile(nomDocument);
-  string result;
+void extractCaractere(char* nomDocument, T& tokens){
+  ifstream infile;
+  infile.open(nomDocument, ios::in);
+  string str;
   string delimiters = " ,#()',.";
-
   while(getline(infile, str)){
     Tokenize(str, tokens, delimiters);
   }
-  return tokens;
+  infile.close();
 }
 
 template<typename T>
-void Tokenize(const string& str, T<string>& tokens, const string& delimiters = " ")
+void Tokenize(const string& str, T& tokens, const string& delimiters = " ")
 {
     // Skip delimiters at beginning.
     string::size_type lastPos = str.find_first_not_of(delimiters, 0);
