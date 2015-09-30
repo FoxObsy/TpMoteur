@@ -21,6 +21,7 @@ void index::indexDocument(list<string> document){
   for(it = document.begin(); it != document.end(); it++){
     for(it2 = listeMotTotal.begin(); it2 != listeMotTotal.end(); it2++){
       nbOccurence = calculOccurence(*it2, *it);
+      map<string,string> inner;
       if(nbOccurence != 0){
 	occurenceDoc = 0;
 	for(it3 = document.begin(); it3 != document.end(); it3++){
@@ -29,9 +30,11 @@ void index::indexDocument(list<string> document){
 	  }
 	}
 	res = nbOccurence*(document.size()/occurenceDoc);
-	map_index.insert(pair<map<string,string>,double>(pair<string,string>(*it, *it2), res));
+	inner.insert(make_pair(*it, *it2));
+	map_index.insert(make_pair(inner, res));
       }else{
-			
+	inner.insert(make_pair(*it, *it));
+	map_index.insert(make_pair(inner, 0));
       }
     }
   }
